@@ -6,11 +6,13 @@ var strftime = require('strftime')
 var port = process.env.PORT || 8800
 // var createJsonRes
 
-app.get('/', function(req,res){
-    var dateStr = req.params.date
-    
+app.get('/*', function(req,res){
+    // var dateStr = req.params.date
+    var dateStr = req.originalUrl.replace('/','').replace('%20',' ').replace('%20',' ');
+    // console.log(dateStr)
+
     var resObj = {natural:null, unix:null}
-    
+
     if(isNaN(Number(dateStr))){
         var d = moment(dateStr)
         if(d.isValid()){
@@ -21,7 +23,7 @@ app.get('/', function(req,res){
         var d = moment.unix(Number(dateStr));
         resObj = createJsonRes(d.toDate())
     }
-    
+
     res.json(resObj)
 })
 
@@ -42,5 +44,3 @@ function createJsonRes(date){
 function formatDate(date){
     return strftime("%B %d, %Y",date)
 }
-
-
